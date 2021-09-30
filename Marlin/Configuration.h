@@ -807,8 +807,7 @@
   //#define ENDSTOPPULLUP_JMAX
   //#define ENDSTOPPULLUP_KMAX
   #define ENDSTOPPULLUP_ZMIN_PROBE
-// Enable pulldown for all endstops to prevent a floating state
-//#define ENDSTOPPULLDOWNS
+
 #if DISABLED(ENDSTOPPULLDOWNS)
   // Disable ENDSTOPPULLDOWNS to set pulldowns individually
   //#define ENDSTOPPULLDOWN_XMIN
