@@ -27,6 +27,4 @@
 
 #define BOARD_INFO_NAME "BTT SKR Pro V1.1"
 
-#define DEFAULT_MACHINE_NAME "JTO CoreXY"
-
 #include "pins_BTT_SKR_PRO_common.h"
