@@ -19,18 +19,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
-/**
- * HAL/shared/HAL.cpp
- */
-
-#include "../../inc/MarlinConfig.h"
-
-MarlinHAL hal;
-
-#if ENABLED(SOFT_RESET_VIA_SERIAL)
-
-  // Global for use by e_parser.h
-  void HAL_reboot() { hal.reboot(); }
-
-#endif
+#define SDIO_D0_PIN   PC8
+#define SDIO_D1_PIN   PC9
+#define SDIO_D2_PIN   PC10
+#define SDIO_D3_PIN   PC11
+#define SDIO_CK_PIN   PC12
+#define SDIO_CMD_PIN  PD2
