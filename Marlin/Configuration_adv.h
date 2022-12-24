@@ -1489,6 +1489,10 @@
     #define M73_REPORT_SD_ONLY            // Report only when printing from SD
   #endif
 #endif
+
+// LCD Print Progress options. Multiple times may be displayed in turn.
+#if HAS_DISPLAY && EITHER(SDSUPPORT, SET_PROGRESS_MANUALLY)
+  #define SHOW_PROGRESS_PERCENT           // Show print progress percentage (doesn't affect progress bar)
   #define SHOW_ELAPSED_TIME               // Display elapsed printing time (prefix 'E')
   //#define SHOW_REMAINING_TIME           // Display estimated time to completion (prefix 'R')
   #if ENABLED(SET_INTERACTION_TIME)
