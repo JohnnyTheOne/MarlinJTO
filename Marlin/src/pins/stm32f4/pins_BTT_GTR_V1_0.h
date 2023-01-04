@@ -33,8 +33,8 @@
 #define DEFAULT_MACHINE_NAME "JTO CoreXY"
 
 #define USES_DIAG_JUMPERS
-#define HAS_OTG_USB_HOST_SUPPORT                  // USB Flash Drive support
-#define M5_EXTENDER                               // The M5 extender is attached
+//#define HAS_OTG_USB_HOST_SUPPORT                  // USB Flash Drive support
+//#define M5_EXTENDER                               // The M5 extender is attached
 
 // Onboard I2C EEPROM
 #define I2C_EEPROM
