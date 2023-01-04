@@ -669,7 +669,7 @@
   #else
     #define DEFAULT_Kp  22.20 //33.79
     #define DEFAULT_Ki   1.08 //3.84
-    #define DEFAULT_Kd  114.00 //74.35
+    #define DEFAULT_Kd 114.00 //74.35
   #endif
 #endif
 
@@ -2221,7 +2221,7 @@
 #define PREHEAT_1_FAN_SPEED     0 // Value from 0 to 255
 
 #define PREHEAT_2_LABEL       "PETG"
-#define PREHEAT_2_TEMP_HOTEND 220
+#define PREHEAT_2_TEMP_HOTEND 225
 #define PREHEAT_2_TEMP_BED     75
 #define PREHEAT_2_TEMP_CHAMBER 35
 #define PREHEAT_2_FAN_SPEED     0 // Value from 0 to 255
