@@ -19,6 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * DWIN Enhanced implementation for PRO UI
@@ -26,8 +27,6 @@
  * Version: 3.18.1
  * Date: 2022/07/05
  */
-
-#pragma once
 
 #include "../../../inc/MarlinConfigPre.h"
 
@@ -138,16 +137,21 @@
 #define ICON_UBLActive            ICON_HotendTemp
 #define ICON_UBLActive            ICON_HotendTemp
 #define ICON_UBLSlot              ICON_ResumeEEPROM
-#define ICON_UBLSaveMesh          ICON_WriteEEPROM
-#define ICON_UBLLoadMesh          ICON_ReadEEPROM
+#define ICON_UBLMeshSave          ICON_WriteEEPROM
+#define ICON_UBLMeshLoad          ICON_ReadEEPROM
 #define ICON_UBLTiltGrid          ICON_PrintSize
 #define ICON_UBLSmartFill         ICON_StockConfiguration
 #define ICON_ZAfterHome           ICON_SetEndTemp
 
-
-
 #define ICON_CaseLight            ICON_Motion
 #define ICON_LedControl           ICON_Motion
+
+// MPC
+#define ICON_MPCNozzle         ICON_SetEndTemp
+#define ICON_MPCValue          ICON_Contact
+#define ICON_MPCHeater         ICON_Temperature
+#define ICON_MPCHeatCap        ICON_SetBedTemp
+#define ICON_MPCFan            ICON_FanSpeed
 
 // Buttons
 #define BTN_Continue          85
@@ -282,10 +286,10 @@ namespace DWINUI {
   //  color: Line segment color
   //  x/y: End point
   inline void LineTo(uint16_t color, uint16_t x, uint16_t y) {
-    DWIN_Draw_Line(color, cursor.x, cursor.y, x, y);
+    dwinDrawLine(color, cursor.x, cursor.y, x, y);
   }
   inline void LineTo(uint16_t x, uint16_t y) {
-    DWIN_Draw_Line(pencolor, cursor.x, cursor.y, x, y);
+    dwinDrawLine(pencolor, cursor.x, cursor.y, x, y);
   }
 
   // Extend a frame box
@@ -458,28 +462,28 @@ namespace DWINUI {
   //  x/y: Upper-left coordinate of the string
   //  *string: The string
   inline void Draw_String(uint16_t x, uint16_t y, const char * const string) {
-    DWIN_Draw_String(false, fontid, textcolor, backcolor, x, y, string);
+    dwinDrawString(false, fontid, textcolor, backcolor, x, y, string);
   }
   inline void Draw_String(uint16_t x, uint16_t y, FSTR_P title) {
-    DWIN_Draw_String(false, fontid, textcolor, backcolor, x, y, FTOP(title));
+    dwinDrawString(false, fontid, textcolor, backcolor, x, y, FTOP(title));
   }
   inline void Draw_String(uint16_t color, uint16_t x, uint16_t y, const char * const string) {
-    DWIN_Draw_String(false, fontid, color, backcolor, x, y, string);
+    dwinDrawString(false, fontid, color, backcolor, x, y, string);
   }
   inline void Draw_String(uint16_t color, uint16_t x, uint16_t y, FSTR_P title) {
-    DWIN_Draw_String(false, fontid, color, backcolor, x, y, title);
+    dwinDrawString(false, fontid, color, backcolor, x, y, title);
   }
   inline void Draw_String(uint16_t color, uint16_t bgcolor, uint16_t x, uint16_t y, const char * const string) {
-    DWIN_Draw_String(true, fontid, color, bgcolor, x, y, string);
+    dwinDrawString(true, fontid, color, bgcolor, x, y, string);
   }
   inline void Draw_String(uint16_t color, uint16_t bgcolor, uint16_t x, uint16_t y, FSTR_P title) {
-    DWIN_Draw_String(true, fontid, color, bgcolor, x, y, title);
+    dwinDrawString(true, fontid, color, bgcolor, x, y, title);
   }
   inline void Draw_String(fontid_t fid, uint16_t color, uint16_t bgcolor, uint16_t x, uint16_t y, const char * const string) {
-    DWIN_Draw_String(true, fid, color, bgcolor, x, y, string);
+    dwinDrawString(true, fid, color, bgcolor, x, y, string);
   }
   inline void Draw_String(fontid_t fid, uint16_t color, uint16_t bgcolor, uint16_t x, uint16_t y, FSTR_P title) {
-    DWIN_Draw_String(true, fid, color, bgcolor, x, y, title);
+    dwinDrawString(true, fid, color, bgcolor, x, y, title);
   }
 
   // Draw a centered string using DWIN_WIDTH
@@ -523,7 +527,7 @@ namespace DWINUI {
   //  color: Rectangle color
   //  frame: Box coordinates and size
   inline void Draw_Box(uint8_t mode, uint16_t color, frame_rect_t frame) {
-    DWIN_Draw_Box(mode, color, frame.x, frame.y, frame.w, frame.h);
+    dwinDrawBox(mode, color, frame.x, frame.y, frame.w, frame.h);
   }
 
   // Draw a circle
