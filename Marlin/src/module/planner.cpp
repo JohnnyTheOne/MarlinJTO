@@ -155,7 +155,7 @@ float Planner::mm_per_step[DISTINCT_AXES];      // (mm) Millimeters per step
   #endif
 #endif
 
-#if HAS_CLASSIC_JERK
+#if ENABLED(CLASSIC_JERK)
   TERN(HAS_LINEAR_E_JERK, xyz_pos_t, xyze_pos_t) Planner::max_jerk;
 #endif
 
@@ -1574,7 +1574,7 @@ void Planner::check_axes_activity() {
         saved_motion_state.acceleration.z = settings.max_acceleration_mm_per_s2[Z_AXIS];
         settings.max_acceleration_mm_per_s2[Z_AXIS] = 100;
       #endif
-      #if HAS_CLASSIC_JERK
+      #if ENABLED(CLASSIC_JERK)
         saved_motion_state.jerk_state = max_jerk;
         max_jerk.set(0, 0 OPTARG(DELTA, 0));
       #endif
@@ -1583,7 +1583,7 @@ void Planner::check_axes_activity() {
       settings.max_acceleration_mm_per_s2[X_AXIS] = saved_motion_state.acceleration.x;
       settings.max_acceleration_mm_per_s2[Y_AXIS] = saved_motion_state.acceleration.y;
       TERN_(DELTA, settings.max_acceleration_mm_per_s2[Z_AXIS] = saved_motion_state.acceleration.z);
-      TERN_(HAS_CLASSIC_JERK, max_jerk = saved_motion_state.jerk_state);
+      TERN_(CLASSIC_JERK, max_jerk = saved_motion_state.jerk_state);
     }
     refresh_acceleration_rates();
   }
@@ -1990,11 +1990,11 @@ bool Planner::_populate_block(
       dm.c  = (CORESIGN(dist.b - dist.c) > 0);  // Motor C direction
     #endif
   #elif ENABLED(MARKFORGED_XY)
-    dm.a = (dist.a + dist.b > 0);               // Motor A direction
+    dm.a = (dist.a TERN(MARKFORGED_INVERSE, -, +) dist.b > 0); // Motor A direction
     dm.b = (dist.b > 0);                        // Motor B direction
   #elif ENABLED(MARKFORGED_YX)
     dm.a = (dist.a > 0);                        // Motor A direction
-    dm.b = (dist.b + dist.a > 0);               // Motor B direction
+    dm.b = (dist.b TERN(MARKFORGED_INVERSE, -, +) dist.a > 0); // Motor B direction
   #else
     XYZ_CODE(
       dm.x = (dist.a > 0),
@@ -2062,9 +2062,9 @@ bool Planner::_populate_block(
     #elif CORE_IS_YZ
       ABS(dist.a), ABS(dist.b + dist.c), ABS(dist.b - dist.c)
     #elif ENABLED(MARKFORGED_XY)
-      ABS(dist.a + dist.b), ABS(dist.b), ABS(dist.c)
+      ABS(dist.a TERN(MARKFORGED_INVERSE, -, +) dist.b), ABS(dist.b), ABS(dist.c)
     #elif ENABLED(MARKFORGED_YX)
-      ABS(dist.a), ABS(dist.b + dist.a), ABS(dist.c)
+      ABS(dist.a), ABS(dist.b TERN(MARKFORGED_INVERSE, -, +) dist.a), ABS(dist.c)
     #elif IS_SCARA
       ABS(dist.a), ABS(dist.b), ABS(dist.c)
     #else // default non-h-bot planning
@@ -2110,11 +2110,11 @@ bool Planner::_populate_block(
       dist_mm.c      = CORESIGN(dist.b - dist.c) * mm_per_step[C_AXIS];
     #endif
   #elif ENABLED(MARKFORGED_XY)
-    dist_mm.a = (dist.a - dist.b) * mm_per_step[A_AXIS];
+    dist_mm.a = (dist.a TERN(MARKFORGED_INVERSE, +, -) dist.b) * mm_per_step[A_AXIS];
     dist_mm.b = dist.b * mm_per_step[B_AXIS];
   #elif ENABLED(MARKFORGED_YX)
     dist_mm.a = dist.a * mm_per_step[A_AXIS];
-    dist_mm.b = (dist.b - dist.a) * mm_per_step[B_AXIS];
+    dist_mm.b = (dist.b TERN(MARKFORGED_INVERSE, +, -) dist.a) * mm_per_step[B_AXIS];
   #else
     XYZ_CODE(
       dist_mm.a = dist.a * mm_per_step[A_AXIS],
@@ -2766,7 +2766,7 @@ bool Planner::_populate_block(
 
   #endif
 
-  #if HAS_CLASSIC_JERK
+  #if ENABLED(CLASSIC_JERK)
 
     /**
      * Adapted from Průša MKS firmware
@@ -2863,7 +2863,7 @@ bool Planner::_populate_block(
       vmax_junction_sqr = sq(vmax_junction);          // Go up or down to the new speed
     #endif
 
-  #endif // Classic Jerk Limiting
+  #endif // CLASSIC_JERK
 
   // Max entry speed of this block equals the max exit speed of the previous block.
   block->max_entry_speed_sqr = vmax_junction_sqr;
@@ -3398,7 +3398,7 @@ void Planner::set_max_feedrate(const AxisEnum axis, float inMaxFeedrateMMS) {
   settings.max_feedrate_mm_s[axis] = inMaxFeedrateMMS;
 }
 
-#if HAS_CLASSIC_JERK
+#if ENABLED(CLASSIC_JERK)
 
   /**
    * For the specified 'axis' set the Maximum Jerk (instant change) to the given value (mm/s)
