@@ -35,8 +35,8 @@
 
 // Settings for the I2C based DIGIPOT (MCP4451) on Azteeg X3 Pro
 #if MB(5DPRINT)
-  #define DIGIPOT_I2C_FACTOR      117.96f
-  #define DIGIPOT_I2C_MAX_CURRENT   1.736f
+  #define DIGIPOT_I2C_FACTOR     117.96f
+  #define DIGIPOT_I2C_MAX_CURRENT 1.736f
 #elif MB(AZTEEG_X5_MINI, AZTEEG_X5_MINI_WIFI)
   #define DIGIPOT_I2C_FACTOR      113.5f
   #define DIGIPOT_I2C_MAX_CURRENT   2.0f
@@ -87,14 +87,8 @@ void DigipotI2C::init() {
     Wire.begin();
   #endif
   // Set up initial currents as defined in Configuration_adv.h
-  static const float digipot_motor_current[] PROGMEM =
-    #if ENABLED(DIGIPOT_USE_RAW_VALUES)
-      DIGIPOT_MOTOR_CURRENT
-    #else
-      DIGIPOT_I2C_MOTOR_CURRENTS
-    #endif
-  ;
-  LOOP_L_N(i, COUNT(digipot_motor_current))
+  static const float digipot_motor_current[] PROGMEM = TERN(DIGIPOT_USE_RAW_VALUES, DIGIPOT_MOTOR_CURRENT, DIGIPOT_I2C_MOTOR_CURRENTS);
+  for (uint8_t i = 0; i < COUNT(digipot_motor_current); ++i)
     set_current(i, pgm_read_float(&digipot_motor_current[i]));
 }
 
