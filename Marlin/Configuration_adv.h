@@ -1081,11 +1081,26 @@
   #define G34_MAX_GRADE              5    // (%) Maximum incline that G34 will handle
   #define Z_STEPPER_ALIGN_ITERATIONS 5    // Number of iterations to apply during alignment
   #define Z_STEPPER_ALIGN_ACC        0.02 // Stop iterating early if the accuracy is better than this
+
   #define RESTORE_LEVELING_AFTER_G34      // Restore leveling after G34 is done?
+
   // After G34, re-home Z (G28 Z) or just calculate it from the last probe heights?
   // Re-homing might be more precise in reproducing the actual 'G28 Z' homing height, especially on an uneven bed.
   #define HOME_AFTER_G34
-#endif
+
+  /**
+   * Commands to execute at the start of G34 probing,
+   * after switching to the PROBING_TOOL.
+   */
+  //#define EVENT_GCODE_BEFORE_G34 "M300 P440 S200"
+
+  /**
+   * Commands to execute at the end of G34 probing.
+   * Useful to retract or move the Z probe out of the way.
+   */
+  //#define EVENT_GCODE_AFTER_G34 "G1 Z10 F12000\nG1 X15 Y330\nG1 Z0.5\nG1 Z10"
+
+#endif // Z_STEPPER_AUTO_ALIGN
 
 /**
  * Assisted Tramming
@@ -3502,7 +3517,6 @@
     //#define W_STALL_SENSITIVITY  8
     //#define SPI_ENDSTOPS              // TMC2130, TMC2240, and TMC5160
     //#define IMPROVE_HOMING_RELIABILITY
-    //#define PREFER_STALLGUARD4        // TMC2240
   #endif
 
   // @section tmc/config
