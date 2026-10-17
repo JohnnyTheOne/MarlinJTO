@@ -223,6 +223,12 @@
 // :[0, 1, 2, 3, 4, 5, 6, 7, 8]
 #define EXTRUDERS 1
 
+// Drive the E axis with two synchronized steppers
+//#define E_DUAL_STEPPER_DRIVERS
+#if ENABLED(E_DUAL_STEPPER_DRIVERS)
+  //#define INVERT_E1_VS_E0_DIR       // E direction signals are opposites
+#endif
+
 // Generally expected filament diameter (1.75, 2.85, 3.0, ...). Used for Volumetric, Filament Width Sensor, etc.
 #define DEFAULT_NOMINAL_FILAMENT_DIA 1.75
 
@@ -3408,6 +3414,11 @@
 //#define ANYCUBIC_LCD_VYPER
 
 //
+// Touch-screen LCD for Anycubic Kobra
+//
+//#define ANYCUBIC_LCD_KOBRA
+
+//
 // Sovol SV-06 Resistive Touch Screen
 //
 //#define SOVOL_SV06_RTS
@@ -3575,7 +3586,7 @@
    */
   #define TFT_FONT  NOTOSANS
   //#define TFT_FONT_LARGE    // Use larger fonts for better visibility. (TFT_RES_1024x600 with NOTOSANS or UNIFONT)
-  //#define TFT_NO_TINY_FONT  // A small numerical font may be used for meshes, etc. Eschew this font to save 1.1k.
+  //#define TFT_NO_TINY_FONT  // Eschew the small numerical font used for meshes to recover Flash space.
 
   /**
    * TFT Theme for Color UI. Choose one of the following or add a new one to 'Marlin/src/lcd/tft/themes' directory

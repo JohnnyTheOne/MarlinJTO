@@ -187,8 +187,10 @@
   #define W_BED_SIZE W_MAX_LENGTH
 #endif
 
-// Require 0,0 bed center for Delta, SCARA, and Polargraph
-#if IS_KINEMATIC
+// Require 0,0 bed center for Delta, Polar, and Polargraph.
+// SCARA and TPARA use whatever coordinate space the Configuration defines: the bed
+// starts at 0,0 unless BED_CENTER_AT_0_0 is enabled. SCARA_OFFSET places the shoulder in that space.
+#if IS_KINEMATIC && !IS_SCARA
   #define BED_CENTER_AT_0_0
 #endif
 
@@ -2671,6 +2673,11 @@
   #undef FAN_SOFT_PWM_REQUIRED
 #endif
 
+// SINGLENOZZLE fan standby needs a fan
+#if !ALL(HAS_FAN, SINGLENOZZLE)
+  #undef SINGLENOZZLE_STANDBY_FAN
+#endif
+
 #if PIN_EXISTS(FANMUX0)
   #define HAS_FANMUX 1  // Part Cooling fan multipliexer
 #else
@@ -2921,17 +2928,21 @@
   #endif
 #endif
 
+// G92 shifts the workspace
+#if DISABLED(NO_WORKSPACE_OFFSETS)
+  #define HAS_WORKSPACE_OFFSET 1
+#endif
+#if DISABLED(NO_HOME_OFFSETS)
+  #if IS_CARTESIAN
+    #define HAS_HOME_OFFSET 1     // M206 affects the Native Machine Space on G28
+  #elif IS_SCARA
+    #define HAS_SCARA_OFFSET 1    // The SCARA home offset applies only on G28
+  #endif
+#endif
+
 /**
  * Bed Probe dependencies
  */
-#if ANY(MESH_BED_LEVELING, HAS_BED_PROBE)
-  #ifndef PROBE_OFFSET_ZMIN
-    #define PROBE_OFFSET_ZMIN -20
-  #endif
-  #ifndef PROBE_OFFSET_ZMAX
-    #define PROBE_OFFSET_ZMAX  20
-  #endif
-#endif
 #if HAS_BED_PROBE
   #ifndef PROBE_OFFSET_XMIN
     #define PROBE_OFFSET_XMIN -(X_BED_SIZE)
@@ -2954,6 +2965,20 @@
   #ifndef NOZZLE_TO_PROBE_OFFSET
     #define NOZZLE_TO_PROBE_OFFSET { 0, 0, 0 }
   #endif
+#endif
+
+#if HAS_BED_PROBE || ALL(HAS_MARLINUI_MENU, MESH_BED_LEVELING) \
+  || (ANY(DWIN_CREALITY_LCD, DWIN_CREALITY_LCD_JYERSUI, DWIN_LCD_PROUI) && ANY(BABYSTEPPING, HAS_WORKSPACE_OFFSET))
+  #ifndef PROBE_OFFSET_ZMIN
+    #define PROBE_OFFSET_ZMIN -20
+  #endif
+  #ifndef PROBE_OFFSET_ZMAX
+    #define PROBE_OFFSET_ZMAX  20
+  #endif
+#else
+  // Nothing can apply a Z offset, so drop limits
+  #undef PROBE_OFFSET_ZMIN
+  #undef PROBE_OFFSET_ZMAX
 #endif
 
 /**
@@ -3041,12 +3066,13 @@
 #endif
 
 /**
- * Only constrain Z on DELTA / SCARA machines
+ * Only constrain Z on DELTA / TPARA machines.
+ * SCARA can also constrain XY to the bed bounds.
  */
 #if ENABLED(POLAR)
   #undef MIN_SOFTWARE_ENDSTOP_Y
   #undef MAX_SOFTWARE_ENDSTOP_Y
-#elif IS_KINEMATIC
+#elif IS_KINEMATIC && DISABLED(SCARA)
   #undef MIN_SOFTWARE_ENDSTOP_X
   #undef MIN_SOFTWARE_ENDSTOP_Y
   #undef MAX_SOFTWARE_ENDSTOP_X
@@ -3207,18 +3233,6 @@
   #undef UI_VOLTAGE_LEVEL
   #undef RADDS_DISPLAY
   #undef MOTOR_CURRENT
-#endif
-
-// G92 shifts the workspace
-#if DISABLED(NO_WORKSPACE_OFFSETS)
-  #define HAS_WORKSPACE_OFFSET 1
-#endif
-#if DISABLED(NO_HOME_OFFSETS)
-  #if IS_CARTESIAN
-    #define HAS_HOME_OFFSET 1     // M206 affects the Native Machine Space on G28
-  #elif IS_SCARA
-    #define HAS_SCARA_OFFSET 1    // The SCARA home offset applies only on G28
-  #endif
 #endif
 
 #if ANY(HAS_MARLINUI_MENU, TOUCH_UI_FTDI_EVE)
